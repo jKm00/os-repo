@@ -1,11 +1,16 @@
 package diningPhilosophers;
 
 import java.util.ArrayList;
+import diningPhilosophers.Philosopher;
 
 public class DiningPhilosophers {
-  private ArrayList<Philosopher> philosophers;
+  private Philosopher[] philosophers;
 
   public DiningPhilosophers() {
-    this.philosophers = new ArrayList<>();
+    this.philosophers = new Philosopher[5];
+  }
+
+  public static void main(String[] args) {
+    System.out.println("Hello world");
   }
 }
