@@ -9,12 +9,23 @@ public class Chopstick {
         this.available = true;
     }
 
-    public synchronized long pickUp(int philosopherId) {
-        System.out.println("Philosopher " + philosopherId + ": Picked up chopstick " + this.id);
-        return 1;
+    /**
+     * True if chopstick is available, false otherwise
+     * @return
+     */
+    public boolean isAvailable() {
+        return this.available;
     }
 
     public int getId() {
         return this.id;
+    }
+
+    public void pickUp() {
+        this.available = false;
+    }
+
+    public void putDown() {
+        this.available = true;
     }
 }
