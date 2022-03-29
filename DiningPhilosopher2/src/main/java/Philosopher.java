@@ -4,6 +4,7 @@ public class Philosopher implements Runnable {
 
     private Object leftChopstick;
     private Object rightChopstick;
+    private State state;
 
     private final int MAX_SLEEP_TIME = 10;
 
@@ -16,6 +17,7 @@ public class Philosopher implements Runnable {
     public Philosopher(Object leftChopstick, Object rightChopstick) {
         this.leftChopstick = leftChopstick;
         this.rightChopstick = rightChopstick;
+        this.state = State.THINKING;
     }
 
     @Override
@@ -23,15 +25,18 @@ public class Philosopher implements Runnable {
         try {
             while (true) {
                 // Philosopher is thinking
-                this.act(": Thinking...");
+                this.doAct();
                 synchronized (leftChopstick) {
-                    act(": Picked up left chopstick");
+                    this.state = State.HUNGRY;
+                    leftChopstick.wait();
                     synchronized (rightChopstick) {
-                        act(": Picked up right chopstick");
+                        rightChopstick.wait();
+                        this.state = State.EATING;
+                        this.doAct();
 
-                        act(": Put down right chopstick");
+                        rightChopstick.notify();
                     }
-                    act(": Put down left chopstick. Back to thinking...");
+                    leftChopstick.notify();
                 }
 
             }
@@ -41,9 +46,20 @@ public class Philosopher implements Runnable {
         }
     }
 
-    private void act(String action) throws  InterruptedException {
-        System.out.println(Thread.currentThread().getName() + " " + action);
-        Thread.sleep(getRandomNumber(this.MAX_SLEEP_TIME));
+    private void doAct() throws  InterruptedException {
+        if (this.state == State.THINKING) {
+            this.printAct("Thinking...");
+            Thread.sleep(getRandomNumber(this.MAX_SLEEP_TIME));
+        } else if (this.state == State.HUNGRY) {
+            this.printAct("Hungry...");
+        } else {
+            this.printAct("Eating...");
+            Thread.sleep(getRandomNumber(this.MAX_SLEEP_TIME));
+        }
+    }
+
+    private void printAct(String act) {
+        System.out.println(Thread.currentThread().getName() + " " + act);
     }
 
     private int getRandomNumber(int upperBound) {
