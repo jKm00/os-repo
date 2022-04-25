@@ -8,7 +8,7 @@ public class Philosopher extends Thread {
   private boolean hungry;
 
   private final Random rand = new Random();
-  private final int UPPER_BOUND_SLEEP = 10;
+  private final int UPPER_BOUND_SLEEP = 3;
 
   public Philosopher(int id, App app) {
     this.id = id;
@@ -20,10 +20,10 @@ public class Philosopher extends Thread {
     while (true) {
       try {
 
-        System.out.println("Philosopher " + id + ": is thinking");
+        System.out.println("Philosopher " + id + ": Thinking...");
         sleep(randomTime());
   
-        System.out.println("Philosopher " + id + ": hungry, waiting for both chopsticks");
+        System.out.println("Philosopher " + id + ": Hungry...");
         this.hungry = true;
         while (hungry) {
           if (app.checkLeft(id) && app.checkRight(id)) {
@@ -32,10 +32,9 @@ public class Philosopher extends Thread {
             app.pickupRight(id);
             app.signalMutex();
   
-            System.out.println("Philosopher " + id + ": got both chopsticks, is now eating");
+            System.out.println("Philosopher " + id + ": Eating...");
             sleep(randomTime());
       
-            System.out.println("Philosopher " + id + ": done eating, putting down both chopsticks");
             app.putdownLeft(id);
             app.putdownRight(id);
             this.hungry = false;
